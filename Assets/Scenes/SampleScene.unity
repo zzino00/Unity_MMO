@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 141952948}
   - component: {fileID: 141952947}
   - component: {fileID: 141952946}
+  - component: {fileID: 141952950}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -228,6 +229,33 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &141952950
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 141952945}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!1 &157912650
 GameObject:
   m_ObjectHideFlags: 0
@@ -240,7 +268,7 @@ GameObject:
   - component: {fileID: 157912653}
   - component: {fileID: 157912652}
   - component: {fileID: 157912651}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -574,7 +602,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -2283163960806578497, guid: dc5ec31f5eb5465468aa91f616ad5f7d, type: 3}
       propertyPath: m_Constraints
-      value: 82
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -2283163960806578497, guid: dc5ec31f5eb5465468aa91f616ad5f7d, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3700805134978800094, guid: dc5ec31f5eb5465468aa91f616ad5f7d, type: 3}
       propertyPath: m_Name
