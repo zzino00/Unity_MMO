@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager 
 {
@@ -12,7 +13,9 @@ public class InputManager
 
     public void OnUpdate()
     {
-        
+
+        if (EventSystem.current.IsPointerOverGameObject())// UI버튼이 클릭중인지 아닌지
+            return;
 
         if(Input.anyKey&&KeyAction != null )
             KeyAction.Invoke();//해당액션이 입력됐다고 구독되어있는 함수들에게 신호를 보냄
