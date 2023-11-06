@@ -18,7 +18,13 @@ public class ResourceManager
             return null;
         }
 
-        return Object.Instantiate(prefab, parent);
+        GameObject go = Object.Instantiate(prefab, parent);
+        int index = go.name.IndexOf("(Clone)");// Clone이라는 이름을 가지고있는 게임오즈젝트의 인덱스를 구함
+        if(index>0 )
+        {
+        go.name = go.name.Substring(0, index);// Substring(a,b) a번부터 b번까지로 문자열을 잘라버림
+        }
+        return go;
     }
 
     public void Destroy(GameObject go) 
