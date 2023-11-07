@@ -53,4 +53,12 @@ public class Managers : MonoBehaviour
         }
       
     }
+
+    public static void Clear()//씬이 넘어갈때 초기화시켜주는 함수들을 매니저에서 관리
+    {
+        Sound.Clear();
+        Input.Clear();
+        Scene.Clear();  
+        UI.Clear();
+    }
 }
