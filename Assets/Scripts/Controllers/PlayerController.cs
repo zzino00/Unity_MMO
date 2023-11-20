@@ -7,19 +7,61 @@ using UnityEngine.AI;
 public class PlayerController : MonoBehaviour
 {
 
-    [SerializeField]
-    private float _speed = 10.0f;
+    PlayerStat _stat;
     Vector3 _destPos; // 마우스를 클릭한 지점을 저장하는 변수
+    Texture2D _attackIcon;
+    Texture2D _handIcon;
+
+    enum CursorType
+    {
+        None,
+        Attack,
+        Hand,
+    }
+
+    CursorType _cursorType = CursorType.None;
     void Start()
     {
+        _attackIcon = Managers.Resource.Load<Texture2D>("Textures/Cursor/Attack");
+        _handIcon =Managers.Resource.Load<Texture2D>("Textures/Cursor/Hand");
+        _stat = GetComponent<PlayerStat>();
         Managers.Input.MouseAction -= OnMouseClicked;
         Managers.Input.MouseAction += OnMouseClicked;
 
     
     }
 
-   
 
+    void UpdateMouseCursor()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);// 카메라에서 Mouse커서 위치로 빛을 쏨
+
+        RaycastHit hit; // 부딪친 물체의 정보를 저장하는 변수
+        if (Physics.Raycast(ray, out hit, 100.0f, _mask))// 빛을 쏴서 부딪힌 물체를 반환함 근데 물체의 레이어가 Wall일때만 반환
+        {
+
+            if (hit.collider.gameObject.layer != (int)Define.Layer.Monster)
+            {
+              if(_cursorType != CursorType.Attack)
+                {
+                    Cursor.SetCursor(_attackIcon, new Vector2(_attackIcon.width / 5, 0), CursorMode.Auto);// 1번째 인자는 사용할 이미지, 2번째는 이미지 안에서 클릭이 되는 좌표설정, 마지막은 일단 Auto로 설정
+                    _cursorType = CursorType.Attack;
+                }
+               
+            }
+            else
+            {
+                if (_cursorType != CursorType.Hand)
+                {
+                    Cursor.SetCursor(_handIcon, new Vector2(_handIcon.width / 3, 0), CursorMode.Auto);
+                    _cursorType = CursorType.Hand;
+                }
+            }
+        }
+    }
+
+
+    int _mask = (1 << (int)Define.Layer.Ground) | (1 << (int)Define.Layer.Monster);// 매번 Layer를 스트링으로 받는게 번거로워서 비트연산자를 이용해서 해당 레이어를 저장?
     void OnMouseClicked(Define.MouseEvent evt)
     {
         if (_state == PlayerState.Die)
@@ -29,14 +71,21 @@ public class PlayerController : MonoBehaviour
         //Debug.DrawRay(Camera.main.transform.position, ray.direction * 100.0f, Color.red, 1.0f);// 눈으로 볼수 있게 디버깅용 빛을 쏨
 
         RaycastHit hit; // 부딪친 물체의 정보를 저장하는 변수
-        if(Physics.Raycast(ray, out hit, 100.0f, LayerMask.GetMask("Wall")))// 빛을 쏴서 부딪힌 물체를 반환함 근데 물체의 레이어가 Wall일때만 반환
+        if(Physics.Raycast(ray, out hit, 100.0f, _mask))// 빛을 쏴서 부딪힌 물체를 반환함 근데 물체의 레이어가 Wall일때만 반환
         {
             _destPos =hit.point;// 부딪힌 지점의 백터값 저장
             _state =PlayerState.Moving;
+
+            if(hit.collider.gameObject.layer==(int)Define.Layer.Monster)
+            {
+                Debug.Log("Monster Clicked");
+            }
+            else
+            {
+                Debug.Log("Ground Clicked");
+            }
         }
-
-
-
+        
         
     }// 마우스로 조작
 
@@ -46,9 +95,7 @@ public class PlayerController : MonoBehaviour
         Die,
         Moving,
         Idle,
-        Channeling,
-        Jumping,
-        Falling,
+        Skill,
     }
 
     PlayerState _state = PlayerState.Idle;
@@ -69,7 +116,7 @@ public class PlayerController : MonoBehaviour
             }
             else
             {
-            float MoveDist = Mathf.Clamp(_speed * Time.deltaTime, 0, dir.magnitude);// 움직이는 거리가 목적지까지의 거리를 넘어가면 안된다. clamp를 통해 움직이는 거리에 범위를 정해줌
+            float MoveDist = Mathf.Clamp(_stat.MoveSpeed * Time.deltaTime, 0, dir.magnitude);// 움직이는 거리가 목적지까지의 거리를 넘어가면 안된다. clamp를 통해 움직이는 거리에 범위를 정해줌
 
             NavMeshAgent nma =  gameObject.GetOrAddComponent<NavMeshAgent>();// Util에 선언한 GetOrAddComponent함수로 NavMeshAgent컴포넌트를 저장
 
@@ -92,11 +139,11 @@ public class PlayerController : MonoBehaviour
                                                                                                                              // 뚝뚝 끊기게 된다. 이를 해결하기위해 Slerp를 사용
                                                                                                                              //애니메이션
            
-             }
+            }
 
 
         Animator anim = GetComponent<Animator>();
-        anim.SetFloat("speed", _speed);
+        anim.SetFloat("speed", _stat.MoveSpeed);
 
 
     }
@@ -110,7 +157,7 @@ public class PlayerController : MonoBehaviour
     }
     void Update()
     {
-        
+        UpdateMouseCursor();
 
         switch(_state)
         {

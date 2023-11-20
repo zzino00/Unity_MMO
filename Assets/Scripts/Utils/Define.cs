@@ -4,6 +4,13 @@ using UnityEngine;
 
 public class Define 
 {
+    public enum Layer
+    {
+        Monster =8,
+        Ground =6,
+        Block =7
+    }
+
     public enum Scene
     {
         Unknown,
