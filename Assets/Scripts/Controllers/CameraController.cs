@@ -14,6 +14,10 @@ public class CameraController : MonoBehaviour
     [SerializeField]
     GameObject _player = null;
     
+    public void SetPlayer(GameObject player)
+    {
+        _player = player;
+    }
     void Start()
     {
         
@@ -24,6 +28,10 @@ public class CameraController : MonoBehaviour
     {
         if(_mode == Define.CameraMode.QuaterView)
         {
+            if (!_player.IsValid())
+            {
+                return;
+            }
             RaycastHit hit;
             if(Physics.Raycast(_player.transform.position, _delta, out hit, _delta.magnitude, LayerMask.GetMask("Block")))// 플레이어 위치에서 카메라를 향해 빛을 쏘는데 중간에 벽이 있을때만 반환
             {
