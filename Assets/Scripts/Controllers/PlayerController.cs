@@ -82,10 +82,8 @@ public class PlayerController : BaseController
         if(_lockTarget!=null)
         {
           Stat targetStat = _lockTarget.GetComponent<Stat>();
-          Stat myStat = gameObject.GetComponent<PlayerStat>();
-          int damage =Mathf.Max(0, myStat.Attack - targetStat.Defense); // 내 공격력 - 타겟의 방어력 => 데미지, 근데 음수로 안떨어지게 최소값 0으로설정
-          targetStat.HP -= damage;
-            
+          targetStat.OnAttacked(_stat);
+
         }
 
 
@@ -171,5 +169,5 @@ public class PlayerController : BaseController
 
     }
 
-
+    
 }
