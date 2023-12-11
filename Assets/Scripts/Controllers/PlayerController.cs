@@ -40,6 +40,8 @@ public class PlayerController : BaseController
         }
 
         Vector3 dir = _destPos - transform.position;// 플레이어 위치에서 목적지까지의 방향벡터
+        dir.y = 0;//플레이어가 수직으로 움직이지 않도록 설정
+
         if (dir.magnitude < 0.1f)// 도착했을 때: float간의 계산에서는 0이 나오기 힘들기 때문에 그냥 엄청 작은숫자로 설정
         {
             State = Define.State.Idle;
